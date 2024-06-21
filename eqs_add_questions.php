@@ -37,6 +37,7 @@ if (
             if ($conn->query($updateSQL) == TRUE)
             {
                 echo "ok";
+                echo "<script>window.location = '/eqs.php'</script>";
             }
             else
             {

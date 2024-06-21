@@ -7,7 +7,7 @@
 
 <br>
 
-<b>fill out survey</b>
+<b>fill out survey</b> <span>if you are not shown an error, then it was successful</span>
 <form action="/eqs_add_answer.php" method="post" id="add_answer_form">
     <!-- will be filled by php -->
 </form>
@@ -19,12 +19,37 @@
     <input type="submit" value="export values to csv file">
 </form>
 
+<br>
+
+<a href="logout.php">log out</a>
+
 <?php
-if (isset($_POST["username"]) && isset($_POST["password"]))
+if (
+    (
+        isset($_POST["username"]) && isset($_POST["password"])
+    )
+    || 
+    (
+        isset($_COOKIE["username"]) && isset($_COOKIE["password"])
+    )
+    )
 {
-    $username = $_POST["username"];
-    $password = hash("sha256", $_POST["password"]);
-    $rawPassword = $_POST["password"];
+    // cookie set
+    if (isset($_COOKIE["username"]) && isset($_COOKIE["password"]))
+    {
+        $username = $_COOKIE["username"];
+        $password = hash("sha256", $_COOKIE["password"]);
+        $rawPassword = $_COOKIE["password"];
+    }
+
+    // post request
+    else
+    {
+        $username = $_POST["username"];
+        $password = hash("sha256", $_POST["password"]);
+        $rawPassword = $_POST["password"];
+    }
+    
     //todo: escape
     $user = $conn->query("SELECT * FROM users WHERE username = '$username' AND password = '$password'");
     $userData = NULL;
@@ -87,7 +112,7 @@ if (isset($_POST["username"]) && isset($_POST["password"]))
 }
 
 else {
-    die ("bad login");
+    die ("<script>window.location = '/index.php';</script>");
 }
 ?>
 
